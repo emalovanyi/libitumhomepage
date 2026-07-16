@@ -1,670 +1,1389 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Libitum - Платформа для пошуку спеціалістів</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Libitum — Знайдіть свого ідеального спеціаліста</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════
+   LIBITUM DESIGN SYSTEM
+   Primary: Teal #14B8A6 / #0D9488 / #0F766E
+   Accent:  Amber #F59E0B (psychologists)
+   Accent2: Violet #8B5CF6 (AI)
+   BG:      #F8FAFB
+   INK:     #0F172A
+   Display: Fraunces
+   Body:    Manrope
+═══════════════════════════════════════════ */
 
-        .card-shadow { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04); }
-        details summary::-webkit-details-marker { display: none; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        .guarantee-bg {
-            background: linear-gradient(to right, rgba(17,24,39,0.95), rgba(17,24,39,0.7)),
-                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80');
-            background-size: cover; background-position: center;
-        }
+:root {
+  --teal-400: #2DD4BF;
+  --teal-500: #14B8A6;
+  --teal-600: #0D9488;
+  --teal-700: #0F766E;
+  --teal-50:  #F0FDFA;
+  --teal-100: #CCFBF1;
+  --amber:    #F59E0B;
+  --amber-50: #FFFBEB;
+  --amber-100:#FDE68A;
+  --violet:   #8B5CF6;
+  --violet-50:#F5F3FF;
+  --bg:       #F8FAFB;
+  --ink:      #0F172A;
+  --ink-2:    #1E293B;
+  --muted:    #64748B;
+  --muted-2:  #94A3B8;
+  --border:   #E2E8F0;
+  --white:    #FFFFFF;
+  --red:      #DC2626;
+  --radius-sm: 12px;
+  --radius:    20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow:    0 4px 16px rgba(15,23,42,.08);
+  --shadow-lg: 0 10px 40px rgba(15,23,42,.10);
+  --shadow-xl: 0 20px 60px rgba(15,23,42,.12);
+}
 
-        /* Hero Slider */
-        .hero-slide { opacity: 0; transition: opacity 1s ease-in-out; position: absolute; inset: 0; }
-        .hero-slide.active { opacity: 1; position: relative; }
-        .hero-slide img { width: 100%; height: 100%; object-fit: cover; }
+html { scroll-behavior: smooth; }
 
-        /* Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-        /* Step Cards */
-        .step-card { transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
-        @media (hover: hover) {
-            .step-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -12px rgba(45,212,191,0.15); }
-            .step-card:hover .icon-box { transform: scale(1.1) rotate(5deg); background-color: #2dd4bf; color: white; }
-        }
-        .icon-box { transition: all 0.3s ease; }
+.fraunces { font-family: 'Fraunces', serif; }
 
-        /* FAQ */
-        details[open] summary ~ * { animation: sweep .5s ease-in-out; }
-        @keyframes sweep { 0%{opacity:0;transform:translateY(-10px)} 100%{opacity:1;transform:translateY(0)} }
-        @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-        .animate-fade-in { animation: fadeInDown 0.4s ease-out forwards; }
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Fraunces', serif; font-weight: 900;
+  font-size: 22px; color: var(--ink); text-decoration: none; letter-spacing: -0.5px;
+}
+.logo-icon {
+  width: 32px; height: 32px; background: var(--teal-500);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 14px; font-weight: 900; font-family: 'Fraunces', serif;
+}
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 14px; font-weight: 600; color: var(--muted);
+  text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--teal-600); }
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.lang-btn {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  background: none; border: none; cursor: pointer;
+}
+.btn-ghost {
+  font-size: 14px; font-weight: 700; color: var(--ink-2);
+  background: none; border: none; cursor: pointer;
+  padding: 8px 16px; border-radius: 50px;
+  transition: background .2s;
+}
+.btn-ghost:hover { background: var(--bg); }
+.btn-primary {
+  background: var(--teal-500); color: white;
+  border: none; cursor: pointer; font-family: 'Manrope', sans-serif;
+  font-size: 14px; font-weight: 700; padding: 10px 24px;
+  border-radius: 50px; transition: background .2s, transform .1s;
+  box-shadow: 0 4px 12px rgba(20,184,166,.3);
+}
+.btn-primary:hover { background: var(--teal-600); }
+.btn-primary:active { transform: scale(.97); }
+.hamburger {
+  display: none; width: 40px; height: 40px;
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 10px; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink);
+}
 
-        /* Section Header */
-        .section-header-line { position: relative; display: inline-block; padding-bottom: 8px; }
-        .section-header-line::after {
-            content: ''; position: absolute; left: 0; bottom: 0;
-            width: 40px; height: 4px; background: currentColor;
-            border-radius: 2px; transition: width 0.3s ease;
-        }
-        section:hover .section-header-line::after { width: 100%; }
+/* ── MOBILE DRAWER ── */
+.drawer-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(15,23,42,.5); z-index: 200;
+}
+.drawer-overlay.open { display: block; }
+.drawer {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 100%;
+  background: white; z-index: 201; transform: translateX(-100%);
+  transition: transform .32s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer-close {
+  width: 36px; height: 36px; background: var(--bg); border: none;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted);
+}
+.drawer-section { padding: 12px 12px 0; }
+.drawer-label {
+  font-size: 11px; font-weight: 700; color: var(--muted-2);
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 0 8px; margin-bottom: 4px;
+}
+.drawer-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  text-decoration: none; transition: background .15s;
+  margin-bottom: 2px;
+}
+.drawer-link:hover, .drawer-link.active { background: var(--teal-50); color: var(--teal-600); }
+.drawer-link i { width: 20px; text-align: center; color: var(--teal-500); }
+.drawer-ai-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal-500), var(--teal-700));
+  color: white; font-size: 15px; font-weight: 700;
+  margin: 12px; cursor: pointer; border: none; font-family: 'Manrope', sans-serif;
+  justify-content: space-between;
+}
+.drawer-footer { padding: 12px; margin-top: auto; border-top: 1px solid var(--border); }
+.drawer-lang {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px; background: var(--bg); border-radius: 12px; padding: 4px;
+  margin-bottom: 12px;
+}
+.drawer-lang-btn {
+  padding: 8px; text-align: center; border-radius: 8px;
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+  background: none; transition: all .15s;
+}
+.drawer-lang-btn.active { background: white; color: var(--teal-600); box-shadow: var(--shadow-sm); }
+.drawer-auth { display: flex; gap: 8px; }
+.drawer-auth .btn-ghost { flex: 1; text-align: center; border: 1.5px solid var(--border); }
+.drawer-auth .btn-primary { flex: 1; text-align: center; }
 
-        /* Specialist Card */
-        .specialist-card { transition: all 0.4s cubic-bezier(0.165,0.84,0.44,1); }
-        @media (hover: hover) {
-            .specialist-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08); }
-        }
+/* ── CONTAINER ── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
-        /* Offer Items */
-        .offer-item-card { transition: all 0.3s ease; }
-        @media (hover: hover) {
-            .offer-item-card:hover { background-color: rgba(255,255,255,0.1); transform: scale(1.02); }
-        }
+/* ── HERO ── */
+.hero { padding: 56px 0 48px; }
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal-50); border: 1.5px solid var(--teal-100);
+  color: var(--teal-600); border-radius: 50px;
+  font-size: 13px; font-weight: 700; padding: 5px 14px;
+  margin-bottom: 20px;
+}
+.hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-500); }
+.hero-h1 {
+  font-family: 'Fraunces', serif; font-weight: 900;
+  font-size: clamp(40px, 5vw, 64px); line-height: 1.05;
+  letter-spacing: -1.5px; color: var(--ink); margin-bottom: 16px;
+}
+.hero-h1 em { font-style: italic; color: var(--teal-500); }
+.hero-desc { font-size: 16px; line-height: 1.7; color: var(--muted); margin-bottom: 24px; max-width: 420px; }
+.hero-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 50px; font-size: 14px; font-weight: 700;
+  cursor: pointer; border: 2px solid; transition: all .2s; text-decoration: none;
+}
+.hero-pill.teal  { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-200, #99F6E4); }
+.hero-pill.amber { background: var(--amber-50); color: #92400E; border-color: var(--amber-100); }
+.hero-pill.violet{ background: var(--violet-50); color: #5B21B6; border-color: #DDD6FE; }
+.hero-pill.teal:hover  { background: var(--teal-100); border-color: var(--teal-500); }
+.hero-pill.amber:hover { background: #FEF3C7; border-color: var(--amber); }
+.hero-pill.violet:hover{ background: #EDE9FE; border-color: var(--violet); }
+.hero-pill.active { color: white !important; background: var(--teal-500) !important; border-color: var(--teal-500) !important; }
+.hero-ctas { display: flex; gap: 12px; align-items: center; }
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--teal-600); color: white; border: none; cursor: pointer;
+  font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 800;
+  padding: 14px 28px; border-radius: 50px;
+  box-shadow: 0 6px 20px rgba(13,148,136,.35); transition: all .2s;
+}
+.btn-hero-primary:hover { background: var(--teal-700); transform: translateY(-1px); }
+.btn-hero-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--ink-2); background: none; border: 2px solid var(--border);
+  font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700;
+  padding: 12px 24px; border-radius: 50px; cursor: pointer; transition: all .2s;
+}
+.btn-hero-ghost:hover { border-color: var(--teal-500); color: var(--teal-600); }
 
-        /* Dashboard Slider */
-        .dash-slide { opacity: 0; transition: opacity 1s ease; position: absolute; inset: 0; }
-        .dash-slide.active { opacity: 0.8; }
-        .dash-dot { transition: all 0.3s ease; }
-        .dash-dot.active { width: 32px; background-color: #2dd4bf; }
+/* Hero stats */
+.hero-stats {
+  display: flex; gap: 28px; margin-top: 36px; padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+.hero-stat-val {
+  font-family: 'Fraunces', serif; font-size: 26px; font-weight: 900;
+  color: var(--ink); line-height: 1; margin-bottom: 3px;
+}
+.hero-stat-stars { color: var(--amber); font-size: 12px; margin-bottom: 4px; }
+.hero-stat-label { font-size: 10px; font-weight: 700; color: var(--muted-2); text-transform: uppercase; letter-spacing: .06em; }
 
-        /* Reveal */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.175,0.885,0.32,1.275); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+/* Hero right — AI card */
+.hero-right { position: relative; }
+.ai-card {
+  background: white; border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border); box-shadow: var(--shadow-xl);
+  padding: 24px; overflow: hidden;
+}
+.ai-card-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #ECFDF5; border: 1.5px solid #A7F3D0;
+  color: var(--teal-600); border-radius: 50px;
+  font-size: 11px; font-weight: 800; padding: 4px 12px;
+  margin-bottom: 16px; letter-spacing: .03em;
+}
+.ai-card-badge::before { content: '●'; color: var(--teal-400); font-size: 8px; }
+.ai-card-timer { font-size: 12px; color: var(--muted-2); font-weight: 600; }
+.ai-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ai-card-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; line-height: 1.2; }
+.ai-card-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
 
-        /* Hero image wrapper */
-        .hero-image-wrapper {
-            position: relative; width: 100%; height: 260px;
-            border-radius: 28px; overflow: hidden;
-            box-shadow: 0 20px 60px -10px rgba(0,0,0,0.2);
-        }
-        @media (min-width: 768px) { .hero-image-wrapper { height: 400px; border-radius: 40px; } }
+.ai-field-label { font-size: 10px; font-weight: 700; color: var(--muted-2); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.ai-select {
+  width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: 'Manrope', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  background: white url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  -webkit-appearance: none; appearance: none; cursor: pointer; margin-bottom: 14px;
+}
+.ai-select:focus { outline: none; border-color: var(--teal-500); }
+.ai-goal-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.ai-chip {
+  padding: 6px 12px; border-radius: 50px; border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer;
+  transition: all .15s; background: none;
+}
+.ai-chip.active { background: var(--teal-500); color: white; border-color: var(--teal-500); }
+.ai-chip:hover:not(.active) { border-color: var(--teal-400); color: var(--teal-600); }
 
-        /* Mobile menu */
-        .mobile-menu { transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
-        .mobile-menu.open { transform: translateX(0); }
+.ai-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
 
-        /* Button ripple */
-        .btn-ripple { position: relative; overflow: hidden; }
-        .btn-ripple:active::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.2); border-radius: inherit; }
+.btn-ai-submit {
+  width: 100%; padding: 14px; background: var(--ink); color: white;
+  border: none; border-radius: 14px; font-family: 'Manrope', sans-serif;
+  font-size: 14px; font-weight: 800; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-ai-submit:hover { background: var(--ink-2); transform: translateY(-1px); }
+.ai-note { text-align: center; font-size: 12px; color: var(--muted-2); margin-top: 10px; }
+.ai-note span { color: var(--teal-600); font-weight: 700; }
 
-        /* ===== SUBJECTS STRIP — always-visible arrows ===== */
-        .subjects-outer { position: relative; }
-        .subj-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-            width: 34px; height: 34px; border-radius: 50%; background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.12); display: flex; align-items: center;
-            justify-content: center; cursor: pointer; border: 1px solid #f3f4f6;
-            transition: all 0.2s; color: #374151;
-        }
-        .subj-arrow:hover { box-shadow: 0 4px 16px rgba(0,0,0,.15); background: #f9fafb; }
-        .subj-arrow:active { transform: translateY(-50%) scale(0.92); }
-        .subj-arrow.left { left: 6px; }
-        .subj-arrow.right { right: 6px; }
+/* Floating tutor preview */
+.tutor-float {
+  position: absolute; top: -16px; right: -16px;
+  background: white; border-radius: 14px; padding: 10px 14px;
+  box-shadow: var(--shadow-lg); border: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 10px; z-index: 2;
+}
+.tutor-float-avatar {
+  width: 36px; height: 36px; border-radius: 10px; overflow: hidden;
+  background: var(--teal-50); flex-shrink: 0;
+}
+.tutor-float-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.tutor-float-name { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.tutor-float-meta { font-size: 11px; color: var(--muted); }
+.tutor-float-rating { color: var(--amber); font-size: 12px; font-weight: 800; }
 
-        /* ===== SECTION NAV ARROWS (near title) ===== */
-        .sec-nav-arrow {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: white; border: 1.5px solid #e5e7eb;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-            color: #6b7280;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        .sec-nav-arrow:hover { border-color: currentColor; background: #f0fdfa; color: #0d9488; transform: scale(1.08); }
-        .sec-nav-arrow:active { transform: scale(0.93); }
-        .sec-nav-arrow i { font-size: 11px; }
-        /* Amber variant hover */
-        .sec-nav-arrow.amber:hover { background: #fffbeb; color: #f59e0b; border-color: #f59e0b; }
+/* Floating result */
+.result-float {
+  position: absolute; bottom: -16px; left: -16px;
+  background: white; border-radius: 14px; padding: 10px 14px;
+  box-shadow: var(--shadow-lg); border: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 10px; z-index: 2;
+}
+.result-float-ava {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--teal-500); display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.result-float-name { font-size: 12px; font-weight: 700; }
+.result-float-sub { font-size: 11px; color: var(--muted); }
 
-        /* ===== CARDS TRACK ===== */
-        .cards-track-wrapper { position: relative; }
-        .cards-track {
-            display: flex; gap: 14px; overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 4px;
-        }
-        .cards-track::-webkit-scrollbar { display: none; }
-        .cards-track { -ms-overflow-style: none; scrollbar-width: none; }
-        .cards-track .card-item { flex-shrink: 0; width: 230px; scroll-snap-align: start; }
-        @media (min-width: 768px) {
-            .cards-track { display: grid; grid-template-columns: repeat(3, 1fr); overflow: visible; gap: 20px; scroll-snap-type: none; }
-            .cards-track .card-item { width: auto; }
-        }
-        @media (min-width: 1024px) { .cards-track { grid-template-columns: repeat(5, 1fr); } }
+/* ── SUBJECTS STRIP ── */
+.subjects-section { padding: 8px 0 0; }
+.subjects-wrap {
+  background: white; border-radius: var(--radius-xl);
+  border: 1px solid var(--border); padding: 20px 44px;
+  position: relative; box-shadow: var(--shadow-sm);
+}
+.subjects-track {
+  display: flex; gap: 28px; overflow-x: auto;
+  scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+}
+.subjects-track::-webkit-scrollbar { display: none; }
+.subjects-track { -ms-overflow-style: none; scrollbar-width: none; }
+.subject-item {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  gap: 8px; cursor: pointer; transition: transform .2s;
+}
+.subject-item:hover { transform: translateY(-3px); }
+.subject-icon {
+  width: 52px; height: 52px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.subject-label { font-size: 11px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+.subj-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 50%; background: white;
+  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: var(--shadow); color: var(--muted);
+  transition: all .2s; z-index: 2;
+}
+.subj-arrow:hover { border-color: var(--teal-500); color: var(--teal-600); }
+.subj-arrow.left { left: 6px; }
+.subj-arrow.right { right: 6px; }
 
-        /* Mobile nav arrows for cards */
-        .cards-nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-            width: 34px; height: 34px; border-radius: 50%; background: white;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12); display: flex; align-items: center;
-            justify-content: center; color: #374151; border: 1px solid #f3f4f6;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .cards-nav-btn:active { transform: translateY(-50%) scale(0.9); }
-        .cards-nav-btn.left { left: -8px; }
-        .cards-nav-btn.right { right: -8px; }
-        @media (min-width: 768px) { .cards-nav-btn { display: none !important; } }
+/* ── SPECIALIST SECTIONS ── */
+.spec-section { padding: 48px 0 0; }
+.spec-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+.spec-title-group { display: flex; align-items: center; gap: 12px; }
+.spec-prev-btn {
+  width: 34px; height: 34px; border-radius: 50%; background: white;
+  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted); transition: all .2s; flex-shrink: 0;
+}
+.spec-prev-btn:hover { border-color: var(--teal-400); color: var(--teal-600); }
+.spec-title { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; line-height: 1; }
+.spec-subtitle { font-size: 13px; color: var(--muted-2); font-weight: 600; margin-top: 4px; }
+.spec-header-right { display: flex; align-items: center; gap: 8px; }
+.spec-next-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px 6px 10px; border-radius: 50px; border: 1.5px solid var(--border);
+  background: white; font-size: 13px; font-weight: 700; color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.spec-next-pill:hover { border-color: currentColor; }
+.spec-scroll-btns { display: flex; gap: 6px; }
+.spec-scroll-btn {
+  width: 34px; height: 34px; border-radius: 50%; background: white;
+  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted); transition: all .2s;
+}
+.spec-scroll-btn:hover { border-color: var(--teal-400); color: var(--teal-600); }
 
-        /* ===== RATING BADGE ===== */
-        .rating-inline {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: #fffbeb; border: 1.5px solid #fde68a;
-            border-radius: 20px; padding: 3px 9px 3px 7px;
-            font-size: 12px; font-weight: 700; color: #111827;
-        }
-        .rating-inline i { color: #F59E0B; font-size: 12px; }
-        .rating-inline .sep { color: #d1d5db; font-weight: 400; margin: 0 1px; }
-        .rating-inline .rev-count { color: #9ca3af; font-size: 11px; font-weight: 400; }
+/* Cards grid */
+.cards-wrapper { position: relative; }
+.cards-track {
+  display: flex; gap: 14px; overflow-x: auto; scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; padding-bottom: 4px;
+}
+.cards-track::-webkit-scrollbar { display: none; }
+.cards-track { -ms-overflow-style: none; scrollbar-width: none; }
+.spec-card {
+  flex-shrink: 0; width: 226px; scroll-snap-align: start;
+  background: white; border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border); padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: all .3s cubic-bezier(.165,.84,.44,1);
+}
+.spec-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
 
-        /* ===== HERO SPECIALTY PILLS ===== */
-        .spec-pill {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 12px; border-radius: 20px;
-            font-size: 13px; font-weight: 700; cursor: pointer;
-            transition: all 0.2s; text-decoration: none;
-        }
+.card-head { display: flex; align-items: flex-start; gap: 12px; }
+.card-avatar {
+  width: 52px; height: 52px; border-radius: 14px; overflow: hidden;
+  flex-shrink: 0; background: var(--teal-50);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 18px; font-weight: 900;
+}
+.card-name { font-size: 15px; font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
+.rating-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--amber-50); border: 1.5px solid var(--amber-100);
+  border-radius: 20px; padding: 2px 8px;
+  font-size: 12px; font-weight: 800;
+}
+.rating-pill i { color: var(--amber); font-size: 10px; }
+.rating-pill .rev { color: var(--muted-2); font-weight: 500; font-size: 11px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.card-tag {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 3px 8px;
+  font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em;
+}
+.card-meta { display: flex; gap: 14px; }
+.card-meta-item { font-size: 11px; color: var(--muted-2); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.card-meta-item i { font-size: 10px; }
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 14px; border-top: 1.5px dashed var(--border); margin-top: auto;
+}
+.card-price-label { font-size: 9px; font-weight: 700; color: var(--muted-2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.card-price { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 800; }
+.card-cta {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; font-size: 13px;
+  transition: all .2s;
+}
+.card-cta:hover { opacity: .85; transform: scale(1.08); }
 
-        /* Safe area */
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-            footer { padding-bottom: calc(env(safe-area-inset-bottom) + 1rem); }
-        }
-    </style>
+/* Mobile card scroll arrows */
+.card-nav-btn {
+  display: none; position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+  width: 32px; height: 32px; border-radius: 50%; background: white;
+  border: 1.5px solid var(--border); align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: var(--shadow); color: var(--muted); font-size: 11px;
+}
+.card-nav-btn.left { left: -8px; }
+.card-nav-btn.right { right: -8px; }
+
+/* dots */
+.card-dots { display: none; justify-content: center; gap: 5px; margin-top: 12px; }
+.card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all .2s; }
+.card-dot.active { width: 18px; border-radius: 3px; }
+
+/* ── CTA BANNER ── */
+.cta-section { padding: 48px 0; }
+.cta-banner {
+  background: linear-gradient(135deg, var(--teal-500) 0%, var(--teal-700) 100%);
+  border-radius: var(--radius-xl); padding: 52px; text-align: center;
+  position: relative; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(20,184,166,.3);
+}
+.cta-banner::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px; background: rgba(255,255,255,.08); border-radius: 50%;
+}
+.cta-banner::after {
+  content: ''; position: absolute; bottom: -80px; left: -40px;
+  width: 240px; height: 240px; background: rgba(255,255,255,.06); border-radius: 50%;
+}
+.cta-banner h3 { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; color: white; margin-bottom: 10px; position: relative; z-index: 1; }
+.cta-banner p { font-size: 16px; color: rgba(255,255,255,.75); margin-bottom: 28px; position: relative; z-index: 1; }
+.btn-cta-white {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: white; color: var(--teal-600);
+  border: none; cursor: pointer; font-family: 'Manrope', sans-serif;
+  font-size: 15px; font-weight: 800; padding: 14px 32px;
+  border-radius: 16px; position: relative; z-index: 1;
+  transition: all .2s; box-shadow: 0 4px 16px rgba(0,0,0,.1);
+}
+.btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+
+/* ── ECOSYSTEM (dark) ── */
+.ecosystem-section {
+  background: linear-gradient(160deg, #0F2027, #0D3B35 40%, #132929);
+  padding: 72px 0; position: relative; overflow: hidden;
+}
+.eco-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.eco-label {
+  font-size: 11px; font-weight: 800; color: var(--teal-400);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px;
+}
+.eco-h2 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; }
+.eco-h2 em { font-style: italic; color: var(--teal-400); }
+.eco-desc { font-size: 15px; color: rgba(255,255,255,.55); line-height: 1.7; margin-bottom: 32px; }
+.eco-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.eco-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 20px; transition: all .2s;
+}
+.eco-card:hover { background: rgba(255,255,255,.08); transform: translateY(-3px); }
+.eco-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.eco-card-title { font-size: 14px; font-weight: 800; color: white; margin-bottom: 4px; }
+.eco-card-desc { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5; }
+
+/* Dash slider */
+.dash-slider-wrap { position: relative; }
+.dash-device {
+  background: #1a1a2e; border-radius: 40px; padding: 12px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.5); ring: 1px solid rgba(255,255,255,.1);
+}
+.dash-screen {
+  border-radius: 30px; height: 380px; overflow: hidden; position: relative;
+}
+.dash-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
+.dash-slide.active { opacity: 1; }
+.dash-slide img { width: 100%; height: 100%; object-fit: cover; }
+.dash-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: none; color: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .2s; z-index: 5;
+}
+.dash-arrow:hover { background: var(--teal-500); }
+.dash-arrow.left { left: 12px; }
+.dash-arrow.right { right: 12px; }
+.dash-dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
+.dash-dot { height: 6px; border-radius: 3px; transition: all .3s; background: rgba(255,255,255,.25); width: 6px; }
+.dash-dot.active { width: 28px; background: var(--teal-400); }
+
+/* ── HOW IT WORKS ── */
+.how-section { padding: 72px 0; background: var(--bg); }
+.section-label {
+  font-size: 11px; font-weight: 800; color: var(--teal-500);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; text-align: center;
+}
+.section-h2 { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 900; text-align: center; margin-bottom: 10px; }
+.section-sub { font-size: 15px; color: var(--muted); text-align: center; max-width: 520px; margin: 0 auto 48px; }
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; position: relative; }
+.step-line {
+  position: absolute; top: 48px; left: calc(50%/3 + 33.3%/2); right: calc(50%/3 + 33.3%/2);
+  height: 2px; background: linear-gradient(to right, var(--teal-100), var(--teal-100));
+  z-index: 0;
+}
+.step-card {
+  background: white; border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border); padding: 28px 24px 24px;
+  position: relative; z-index: 1;
+  transition: all .3s cubic-bezier(.175,.885,.32,1.275);
+}
+.step-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--teal-100); }
+.step-num {
+  position: absolute; top: 16px; right: 20px;
+  font-family: 'Fraunces', serif; font-size: 64px; font-weight: 900;
+  color: var(--bg); line-height: 1; user-select: none;
+}
+.step-icon {
+  width: 52px; height: 52px; background: var(--teal-50); border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  color: var(--teal-500); font-size: 22px; transition: all .3s;
+}
+.step-card:hover .step-icon { background: var(--teal-500); color: white; transform: scale(1.08) rotate(5deg); }
+.step-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+.step-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── FAQ ── */
+.faq-section { padding: 48px 0 72px; }
+.faq-inner { max-width: 760px; margin: 0 auto; }
+.faq-item {
+  background: white; border-radius: var(--radius);
+  border: 1.5px solid var(--border); margin-bottom: 10px; overflow: hidden;
+  transition: border-color .2s;
+}
+.faq-item.open { border-color: var(--teal-100); }
+.faq-item:hover { border-color: var(--teal-200, #99F6E4); }
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 22px; cursor: pointer; font-size: 15px; font-weight: 700;
+  list-style: none; gap: 16px;
+}
+.faq-icon {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--teal-50);
+  border: 1.5px solid var(--teal-100); display: flex; align-items: center; justify-content: center;
+  color: var(--teal-500); font-size: 11px; flex-shrink: 0; transition: transform .3s;
+}
+.faq-item.open .faq-icon { transform: rotate(180deg); background: var(--teal-500); color: white; }
+.faq-a {
+  padding: 0 22px; max-height: 0; overflow: hidden;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1), padding .3s;
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+}
+.faq-item.open .faq-a { max-height: 200px; padding: 0 22px 20px; }
+
+/* ── FOOTER ── */
+footer { background: white; border-top: 1px solid var(--border); padding: 56px 0 32px; }
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px;
+}
+.footer-brand-logo {
+  font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px; letter-spacing: -0.5px;
+  color: var(--ink); margin-bottom: 12px;
+}
+.footer-brand-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.footer-socials { display: flex; gap: 8px; }
+.footer-social {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 14px; text-decoration: none; transition: all .2s;
+}
+.footer-social:hover { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-100); }
+.footer-col-title {
+  font-size: 11px; font-weight: 800; color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px;
+}
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 8px; }
+.footer-links a {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  font-weight: 500; transition: color .2s;
+}
+.footer-links a:hover { color: var(--teal-600); }
+.footer-links li span { font-size: 12px; color: var(--muted-2); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 28px; border-top: 1px solid var(--border);
+}
+.footer-copy { font-size: 12px; color: var(--muted-2); }
+.footer-legal { display: flex; gap: 20px; }
+.footer-legal a { font-size: 12px; color: var(--muted-2); text-decoration: none; transition: color .2s; }
+.footer-legal a:hover { color: var(--teal-600); }
+
+/* ── MOBILE TAB BAR ── */
+.mobile-tabbar {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: white; border-top: 1px solid var(--border);
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+}
+.tabbar-inner { display: flex; justify-content: space-around; }
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 700; color: var(--muted-2);
+  cursor: pointer; padding: 2px 8px; transition: color .2s;
+}
+.tab-item i { font-size: 20px; }
+.tab-item.active { color: var(--teal-500); }
+.tab-item.ai-tab { color: var(--amber); }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: all .7s cubic-bezier(.175,.885,.32,1.275); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════
+   RESPONSIVE
+══════════════════ */
+@media (max-width: 1023px) {
+  .nav-links, .header-actions { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-h1 { font-size: 40px; }
+  .hero-desc { margin: 0 auto 20px; }
+  .hero-pills { justify-content: center; }
+  .hero-ctas { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-right { display: none; }
+  /* Show mobile AI card inline */
+  /* hero-mobile-ai hidden on mobile — accessible via AI tab */
+
+  .eco-inner { grid-template-columns: 1fr; gap: 32px; }
+  .dash-device { max-width: 360px; margin: 0 auto; }
+  .eco-h2 { font-size: 30px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .step-line { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .spec-scroll-btns { display: none; }
+  .card-dots { display: flex; }
+  .card-nav-btn { display: flex; }
+  .mobile-tabbar { display: block; }
+  body { padding-bottom: 72px; }
+  .cta-banner { padding: 36px 24px; }
+  .cta-banner h3 { font-size: 24px; }
+  .section-h2 { font-size: 30px; }
+  .eco-h2 { font-size: 32px; }
+}
+
+@media (max-width: 640px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 32px 0 24px; }
+  .hero-h1 { font-size: 34px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .faq-q { font-size: 14px; }
+  .subjects-wrap { padding: 16px 36px; }
+  .spec-title { font-size: 28px; }
+}
+
+/* hero mobile ai card */
+.hero-mobile-ai { display: none; }
+</style>
 </head>
-<body class="bg-[#F9FAFB] text-[#111827]">
+<body>
 
-    <!-- HEADER -->
-    <header class="bg-white/90 backdrop-blur-md py-3 md:py-4 border-b border-gray-100 sticky top-0 z-50">
-        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-            <div class="text-xl md:text-2xl font-extrabold tracking-tighter text-black cursor-pointer">LIBITUM</div>
-            <nav class="hidden md:flex space-x-8 text-[14px] font-medium text-gray-600">
-                <a href="#" class="hover:text-teal-600 transition">Знайти спеціаліста</a>
-                <a href="#" class="hover:text-teal-600 transition">Стати спеціалістом</a>
-                <a href="#" class="hover:text-teal-600 transition">Як це працює</a>
-                <a href="#" class="hover:text-teal-600 transition">Про нас</a>
-            </nav>
-            <div class="hidden md:flex items-center space-x-5">
-                <div class="flex items-center text-sm font-semibold cursor-pointer"><span class="mr-1">UA</span><i class="fa-solid fa-chevron-down text-[10px]"></i></div>
-                <button class="text-sm font-bold text-gray-700 hover:text-black transition">Увійти</button>
-                <button class="bg-[#2DD4BF] text-white px-7 py-2.5 rounded-full text-sm font-bold hover:bg-teal-500 transition shadow-lg shadow-teal-100">Реєстрація</button>
-            </div>
-            <div class="flex md:hidden items-center space-x-3">
-                <button class="text-sm font-bold text-gray-700 px-4 py-2 rounded-full border border-gray-200">Увійти</button>
-                <button onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200">
-                    <i class="fa-solid fa-bars text-gray-700" id="hamburger-icon"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">L</div>
+      Libitum
+    </a>
+    <nav class="nav-links">
+      <a href="#" class="active">Знайти спеціаліста</a>
+      <a href="#">Стати спеціалістом</a>
+      <a href="#how">Як це працює</a>
+      <a href="#">Про нас</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-btn">🇺🇦 UA <i class="fa-solid fa-chevron-down" style="font-size:9px;margin-left:2px"></i></button>
+      <button class="btn-ghost">Увійти</button>
+      <button class="btn-primary">Реєстрація</button>
+    </div>
+    <button class="hamburger" onclick="openDrawer()" aria-label="Меню">
+      <i class="fa-solid fa-bars" id="hamburger-icon"></i>
+    </button>
+  </div>
+</header>
 
-    <div class="fixed inset-0 bg-black/50 z-40 hidden" id="menu-overlay" onclick="toggleMobileMenu()"></div>
-    <div class="mobile-menu fixed top-0 left-0 w-[80%] max-w-[300px] h-full bg-white z-50 shadow-2xl flex flex-col" id="mobile-menu">
-        <div class="flex items-center justify-between p-6 border-b border-gray-100">
-            <div class="text-xl font-extrabold tracking-tighter">LIBITUM</div>
-            <button onclick="toggleMobileMenu()" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100"><i class="fa-solid fa-xmark text-gray-600"></i></button>
+<!-- ══ MOBILE DRAWER ══ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+
+  <!-- Head -->
+  <div style="padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;background:var(--teal-500);border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Fraunces',serif;font-weight:900;font-size:16px">L</div>
+      <span style="font-family:'Fraunces',serif;font-weight:900;font-size:18px;letter-spacing:.1em;color:var(--ink)">LIBITUM</span>
+    </div>
+    <button onclick="closeDrawer()" style="width:44px;height:44px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);font-size:16px"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <!-- Body -->
+  <div style="padding:24px 20px 0;flex:1;overflow-y:auto">
+    <div style="font-size:11px;font-weight:800;color:var(--muted-2);letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px">Меню</div>
+    <ul style="list-style:none;margin-bottom:24px">
+      <li style="border-bottom:1px solid var(--border)">
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;padding:15px 8px;font-size:16px;font-weight:600;color:var(--ink);text-decoration:none;border-radius:10px;gap:12px">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:36px;border-radius:10px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;flex-shrink:0"><i class="fa-solid fa-magnifying-glass"></i></span>Знайти спеціаліста</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--muted-2);font-size:12px"></i>
+        </a>
+      </li>
+      <li style="border-bottom:1px solid var(--border)">
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;padding:15px 8px;font-size:16px;font-weight:600;color:var(--ink);text-decoration:none;border-radius:10px;gap:12px">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:36px;border-radius:10px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;flex-shrink:0"><i class="fa-solid fa-user-plus"></i></span>Стати спеціалістом</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--muted-2);font-size:12px"></i>
+        </a>
+      </li>
+      <li style="border-bottom:1px solid var(--border)">
+        <a href="#how" onclick="closeDrawer()" style="display:flex;align-items:center;justify-content:space-between;padding:15px 8px;font-size:16px;font-weight:600;color:var(--teal-600);text-decoration:none;border-radius:10px;background:var(--teal-50);gap:12px">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:36px;border-radius:10px;background:var(--teal-100);border:1.5px solid var(--teal-100);display:flex;align-items:center;justify-content:center;color:var(--teal-600);font-size:15px;flex-shrink:0"><i class="fa-regular fa-circle"></i></span>Як це працює</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--muted-2);font-size:12px"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;padding:15px 8px;font-size:16px;font-weight:600;color:var(--ink);text-decoration:none;border-radius:10px;gap:12px">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:36px;border-radius:10px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;flex-shrink:0"><i class="fa-solid fa-circle-info"></i></span>Про нас</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--muted-2);font-size:12px"></i>
+        </a>
+      </li>
+    </ul>
+
+    <div style="font-size:11px;font-weight:800;color:var(--muted-2);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px">Швидкі дії</div>
+    <button style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,var(--teal-500),var(--teal-700));color:white;font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;border:none;cursor:pointer;margin-bottom:24px">
+      <span>AI-підбір репетитора</span>
+      <i class="fa-solid fa-chevron-right" style="opacity:.6;font-size:13px"></i>
+    </button>
+
+    <div style="font-size:11px;font-weight:800;color:var(--muted-2);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px">Мова інтерфейсу</div>
+    <div style="display:flex;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:0">
+      <button onclick="setLang(this)" class="drawer-lang-btn active" style="flex:1;padding:12px;text-align:center;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;background:white;color:var(--teal-600);box-shadow:inset 0 0 0 1.5px var(--teal-500);border-radius:10px;border:none;cursor:pointer">🇺🇦 UA</button>
+      <button onclick="setLang(this)" class="drawer-lang-btn" style="flex:1;padding:12px;text-align:center;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer">🇬🇧 EN</button>
+      <button onclick="setLang(this)" class="drawer-lang-btn" style="flex:1;padding:12px;text-align:center;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer">RU</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="display:flex;gap:10px;padding:20px">
+    <button class="btn-ghost" style="flex:1;border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center">Увійти</button>
+    <button class="btn-primary" style="flex:1;border-radius:12px;padding:14px;text-align:center">Реєстрація</button>
+  </div>
+
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Left -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Платформа №1 для пошуку фахівців в Україні
         </div>
-        <nav class="flex flex-col p-6 space-y-2 text-[15px] font-medium text-gray-700">
-            <a href="#" class="py-3 px-4 rounded-2xl hover:bg-teal-50 hover:text-teal-600 transition flex items-center"><i class="fa-solid fa-magnifying-glass mr-3 text-teal-400 w-5"></i>Знайти спеціаліста</a>
-            <a href="#" class="py-3 px-4 rounded-2xl hover:bg-teal-50 hover:text-teal-600 transition flex items-center"><i class="fa-solid fa-user-plus mr-3 text-teal-400 w-5"></i>Стати спеціалістом</a>
-            <a href="#" class="py-3 px-4 rounded-2xl hover:bg-teal-50 hover:text-teal-600 transition flex items-center"><i class="fa-solid fa-circle-info mr-3 text-teal-400 w-5"></i>Як це працює</a>
-            <a href="#" class="py-3 px-4 rounded-2xl hover:bg-teal-50 hover:text-teal-600 transition flex items-center"><i class="fa-solid fa-building mr-3 text-teal-400 w-5"></i>Про нас</a>
-        </nav>
-        <div class="p-6 mt-auto border-t border-gray-100">
-            <button class="w-full bg-[#2DD4BF] text-white py-3.5 rounded-2xl font-bold text-sm hover:bg-teal-500 transition shadow-lg shadow-teal-100 mb-3">Реєстрація</button>
-            <div class="text-center text-xs text-gray-400 font-medium">Мова: <span class="text-gray-700 font-bold">UA</span></div>
+        <h1 class="hero-h1">
+          Знайдіть свого<br><em>ідеального</em> спеціаліста
+        </h1>
+        
+        <div class="hero-pills">
+          <a href="category-repetitors.html" class="hero-pill teal active">
+            <i class="fa-solid fa-chalkboard-user" style="font-size:12px"></i> Репетитори
+          </a>
+          <a href="category-psychologists.html" class="hero-pill amber">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;display:inline-block"></span> Психологи
+          </a>
+          <a href="category-logopedists.html" class="hero-pill violet">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--violet);flex-shrink:0;display:inline-block"></span> Логопеди
+          </a>
         </div>
+        <div class="hero-ctas">
+          <button class="btn-hero-primary">
+            Знайти спеціаліста <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-stars">★★★★★</div>
+            <div class="hero-stat-val">4.9</div>
+            <div class="hero-stat-label">Середня оцінка</div>
+          </div>
+          <div>
+            <div style="height:12px"></div>
+            <div class="hero-stat-val">5К+</div>
+            <div class="hero-stat-label">Перевірених фахівців</div>
+          </div>
+          <div>
+            <div style="height:12px"></div>
+            <div class="hero-stat-val">98%</div>
+            <div class="hero-stat-label">Успішних знайомств</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: AI card desktop -->
+      <div class="hero-right">
+        <div style="position:relative">
+          <div class="tutor-float">
+            <div class="tutor-float-avatar">
+              <img src="https://i.pravatar.cc/150?u=olena" alt="Олена К.">
+            </div>
+            <div>
+              <div class="tutor-float-name">Олена К.</div>
+              <div class="tutor-float-meta">Англійська · 12 років</div>
+            </div>
+            <div class="tutor-float-rating">★ 4.9</div>
+          </div>
+
+          <div class="ai-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div class="ai-card-badge">AI-ПІДБІР</div>
+              <div class="ai-card-timer">~30 секунд</div>
+            </div>
+            <div class="ai-card-title">Не знаєте кого обрати?<br>Дозвольте AI підібрати</div>
+            <div class="ai-card-sub">Топ-3 ідеальні матчі під ваш запит за хвилину</div>
+
+            <div class="ai-field-label">Предмет</div>
+            <select class="ai-select">
+              <option>📐 Математика · 8 клас</option>
+              <option>🇬🇧 Англійська</option>
+              <option>⚗️ Хімія</option>
+              <option>🧬 Біологія</option>
+              <option>💬 Логопед</option>
+              <option>🧠 Психолог</option>
+            </select>
+
+            <div class="ai-field-label">Мета навчання</div>
+            <div class="ai-goal-chips">
+              <button class="ai-chip active">Підготовка до НМТ</button>
+              <button class="ai-chip">Підтягнути оцінки</button>
+              <button class="ai-chip">З нуля</button>
+              <button class="ai-chip">Розвиток</button>
+            </div>
+
+            <div class="ai-row">
+              <div>
+                <div class="ai-field-label">Формат</div>
+                <select class="ai-select" style="margin-bottom:0">
+                  <option>💻 Онлайн</option>
+                  <option>🏠 Офлайн</option>
+                </select>
+              </div>
+              <div>
+                <div class="ai-field-label">Бюджет/год</div>
+                <select class="ai-select" style="margin-bottom:0">
+                  <option>300 — 500 ₴</option>
+                  <option>500 — 800 ₴</option>
+                  <option>800+ ₴</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn-ai-submit">
+              <i class="fa-regular fa-star"></i>
+              Підібрати спеціаліста безкоштовно
+            </button>
+            <div class="ai-note">
+              <span>Без реєстрації.</span> Результат за 30 секунд.
+            </div>
+          </div>
+
+          <div class="result-float">
+            <div class="result-float-ava">М</div>
+            <div>
+              <div class="result-float-name">Михайло Р.</div>
+              <div class="result-float-sub">Математика · НМТ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- ============================
-         HERO
-    ============================= -->
-    <section class="container mx-auto px-4 md:px-6 py-8 md:py-12 flex flex-col md:flex-row items-center gap-8">
+    
 
-        <!-- Left -->
-        <div class="w-full md:w-1/2 space-y-5 text-center md:text-left">
-
-            <!-- Desktop -->
-            <div class="hidden md:block">
-                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.1] tracking-tight text-gray-900 mb-4">
-                    Знайдіть свого<br><span class="text-teal-500">спеціаліста</span>
-                </h1>
-                <p class="text-gray-500 text-sm font-medium mb-3">Оберіть напрямок:</p>
-                <div class="flex flex-wrap gap-2">
-                    <a onclick="scrollToSection('repetitors')" class="spec-pill bg-teal-50 text-teal-700 border-2 border-teal-200 hover:bg-teal-100 hover:border-teal-400">
-                        <i class="fa-solid fa-chalkboard-user text-teal-500 text-xs"></i>Репетитори
-                    </a>
-                    <a onclick="scrollToSection('psychologists')" class="spec-pill bg-amber-50 text-amber-700 border-2 border-amber-200 hover:bg-amber-100 hover:border-amber-400">
-                        <i class="fa-solid fa-brain text-amber-500 text-xs"></i>Психологи
-                    </a>
-                    <a onclick="scrollToSection('logopedists')" class="spec-pill bg-violet-50 text-violet-700 border-2 border-violet-200 hover:bg-violet-100 hover:border-violet-400">
-                        <i class="fa-solid fa-comments text-violet-500 text-xs"></i>Логопеди
-                    </a>
-                </div>
-                <p class="text-gray-400 text-sm leading-relaxed max-w-sm mt-4">
-                    Перевірені спеціалісти для вашого розвитку. Перший урок безризиково.
-                </p>
-            </div>
-
-            <!-- Mobile -->
-            <div class="md:hidden">
-                <h1 class="text-4xl sm:text-5xl font-extrabold leading-[1.1] tracking-tight text-gray-900">
-                    Знайдіть свого<br><span class="text-teal-500">спеціаліста</span>
-                </h1>
-                <p class="text-gray-400 text-sm leading-relaxed mt-3">
-                    Репетитори, психологи та логопеди.
-                </p>
-            </div>
-
-            <div class="flex justify-center md:justify-start">
-                <button class="btn-ripple bg-[#0D9488] text-white px-7 py-4 rounded-full font-bold flex items-center hover:bg-teal-700 transition shadow-lg active:scale-95">
-                    Знайти спеціаліста <i class="fa-solid fa-arrow-right ml-3 text-sm"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Right — hidden on mobile -->
-        <div class="hidden md:flex w-full md:w-1/2 justify-end">
-            <div class="relative w-full max-w-[500px]">
-                <div class="absolute top-4 left-4 bg-white p-3 rounded-2xl shadow-xl z-20 flex items-center space-x-3">
-                    <div class="bg-yellow-400 w-9 h-9 rounded-full flex items-center justify-center text-white shadow-inner"><i class="fa-solid fa-star text-sm"></i></div>
-                    <div>
-                        <div class="font-extrabold text-base leading-none">4.9/5</div>
-                        <div class="text-gray-400 text-[9px] font-bold uppercase tracking-wider mt-0.5">СЕРЕДНЯ ОЦІНКА</div>
-                    </div>
-                </div>
-                <div class="hero-image-wrapper group ring-8 ring-white">
-                    <div class="hero-slide active"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1000&q=80" alt="Репетитор"></div>
-                    <div class="hero-slide"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1000&q=80" alt="Психолог"></div>
-                    <div class="hero-slide"><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1000&q=80" alt="Логопед"></div>
-                    <button onclick="prevHeroSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition z-30 opacity-0 group-hover:opacity-100"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-                    <button onclick="nextHeroSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition z-30 opacity-0 group-hover:opacity-100"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SUBJECTS STRIP -->
-    <section class="container mx-auto px-4 md:px-6 py-2">
-        <div class="subjects-outer bg-white py-4 md:py-5 px-10 rounded-[24px] md:rounded-[32px] card-shadow border border-gray-100">
-            <button class="subj-arrow left" onclick="scrollSubjects(-1)"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-            <div id="subject-track" class="flex space-x-5 md:space-x-10 overflow-x-auto scroll-smooth no-scrollbar items-center" style="-webkit-overflow-scrolling:touch;">
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 text-lg md:text-xl"><i class="fa-solid fa-language"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">English</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 text-lg md:text-xl"><i class="fa-solid fa-calculator"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Математика</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-cyan-50 rounded-2xl flex items-center justify-center text-cyan-600 text-lg md:text-xl"><i class="fa-solid fa-atom"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Фізика</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-lg md:text-xl"><i class="fa-solid fa-dna"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Біологія</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 text-lg md:text-xl"><i class="fa-solid fa-bullhorn"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Іспанська</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 text-lg md:text-xl"><i class="fa-solid fa-heart-pulse"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Психологія</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-pink-500 text-lg md:text-xl"><i class="fa-solid fa-palette"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Малювання</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg md:text-xl"><i class="fa-solid fa-music"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Музика</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 text-lg md:text-xl"><i class="fa-solid fa-landmark"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Історія</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-lime-50 rounded-2xl flex items-center justify-center text-lime-600 text-lg md:text-xl"><i class="fa-solid fa-earth-americas"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Географія</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 text-lg md:text-xl"><i class="fa-solid fa-pencil"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">До школи</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 text-lg md:text-xl"><i class="fa-solid fa-brain"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Логіка</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-violet-50 rounded-2xl flex items-center justify-center text-violet-500 text-lg md:text-xl"><i class="fa-solid fa-comments"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">Логопед</span></div>
-                <div class="flex-shrink-0 flex flex-col items-center cursor-pointer active:scale-95 transition-transform"><div class="w-12 h-12 md:w-14 md:h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 text-lg md:text-xl"><i class="fa-solid fa-star"></i></div><span class="mt-1.5 text-[10px] md:text-xs font-bold">НМТ / ЗНО</span></div>
-            </div>
-            <button class="subj-arrow right" onclick="scrollSubjects(1)"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-        </div>
-    </section>
-
-    <!-- SPECIALISTS -->
-    <div id="specialists-container"></div>
-
-    <!-- CTA -->
-    <div class="container mx-auto px-4 md:px-6 py-12 md:py-20">
-        <div class="bg-gradient-to-r from-teal-500 to-teal-600 rounded-[28px] md:rounded-[40px] p-8 md:p-12 text-center shadow-2xl relative overflow-hidden group">
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-white opacity-5 rounded-full group-hover:scale-110 transition-transform duration-700"></div>
-            <div class="relative z-10 max-w-2xl mx-auto">
-                <h3 class="text-2xl md:text-3xl font-black text-white mb-3 md:mb-4 tracking-tight">Не знайшли свого ідеального фахівця?</h3>
-                <p class="text-teal-50/80 mb-7 md:mb-10 text-base md:text-lg">Перегляньте повний список із понад 5000 перевірених професіоналів.</p>
-                <button class="btn-ripple bg-white text-teal-600 px-8 md:px-12 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg hover:bg-teal-50 transition-all shadow-xl hover:-translate-y-1 flex items-center mx-auto space-x-3 active:scale-95">
-                    <span>Повний каталог спеціалістів</span><i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
+<!-- ══ SUBJECTS STRIP ══ -->
+<section class="subjects-section">
+  <div class="container">
+    <div class="subjects-wrap">
+      <button class="subj-arrow left" onclick="scrollSubjects(-1)"><i class="fa-solid fa-chevron-left" style="font-size:11px"></i></button>
+      <div class="subjects-track" id="subj-track">
+        <div class="subject-item"><div class="subject-icon" style="background:#EFF6FF;color:#3B82F6"><i class="fa-solid fa-language"></i></div><span class="subject-label">English</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FEF2F2;color:#EF4444"><i class="fa-solid fa-calculator"></i></div><span class="subject-label">Математика</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#ECFEFF;color:#06B6D4"><i class="fa-solid fa-atom"></i></div><span class="subject-label">Фізика</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F0FDF4;color:#22C55E"><i class="fa-solid fa-dna"></i></div><span class="subject-label">Біологія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FEFCE8;color:#EAB308"><i class="fa-solid fa-bullhorn"></i></div><span class="subject-label">Іспанська</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FFF7ED;color:#F97316"><i class="fa-solid fa-heart-pulse"></i></div><span class="subject-label">Психологія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FDF2F8;color:#EC4899"><i class="fa-solid fa-palette"></i></div><span class="subject-label">Малювання</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#ECFDF5;color:#10B981"><i class="fa-solid fa-music"></i></div><span class="subject-label">Музика</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FFFBEB;color:#D97706"><i class="fa-solid fa-landmark"></i></div><span class="subject-label">Історія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F7FEE7;color:#65A30D"><i class="fa-solid fa-earth-americas"></i></div><span class="subject-label">Географія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:var(--teal-50);color:var(--teal-600)"><i class="fa-solid fa-pencil"></i></div><span class="subject-label">До школи</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#EEF2FF;color:#6366F1"><i class="fa-solid fa-brain"></i></div><span class="subject-label">Логіка</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:var(--violet-50);color:var(--violet)"><i class="fa-solid fa-comments"></i></div><span class="subject-label">Логопед</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FFF1F2;color:#F43F5E"><i class="fa-solid fa-star"></i></div><span class="subject-label">НМТ / ЗНО</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F0F9FF;color:#0EA5E9"><i class="fa-solid fa-flask"></i></div><span class="subject-label">Хімія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FFF7F0;color:#F97316"><i class="fa-solid fa-guitar"></i></div><span class="subject-label">Гітара</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F8F0FF;color:#A855F7"><i class="fa-solid fa-chess"></i></div><span class="subject-label">Шахи</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#ECFDF5;color:#059669"><i class="fa-solid fa-book-open"></i></div><span class="subject-label">Українська</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FEF9F0;color:#D97706"><i class="fa-solid fa-code"></i></div><span class="subject-label">Програм.</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F0FFFE;color:#14B8A6"><i class="fa-solid fa-microphone"></i></div><span class="subject-label">Вокал</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FFF0F5;color:#EC4899"><i class="fa-solid fa-theater-masks"></i></div><span class="subject-label">Акторська</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F0F4FF;color:#4F46E5"><i class="fa-solid fa-globe"></i></div><span class="subject-label">Французька</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#FEFCE8;color:#CA8A04"><i class="fa-solid fa-pen-nib"></i></div><span class="subject-label">Каліграфія</span></div>
+        <div class="subject-item"><div class="subject-icon" style="background:#F0FDF4;color:#16A34A"><i class="fa-solid fa-seedling"></i></div><span class="subject-label">Природозн.</span></div>
+      </div>
+      <button class="subj-arrow right" onclick="scrollSubjects(1)"><i class="fa-solid fa-chevron-right" style="font-size:11px"></i></button>
     </div>
+  </div>
+</section>
 
-    <!-- WHAT WE OFFER -->
-    <section class="guarantee-bg py-16 md:py-24 text-white">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="flex flex-col lg:flex-row items-center gap-10 md:gap-16">
-                <div class="lg:w-1/2 space-y-6 md:space-y-8 text-center lg:text-left">
-                    <h2 class="text-3xl md:text-5xl font-extrabold leading-tight text-white reveal">Libitum — це більше ніж <br><span class="text-[#2DD4BF]">просто пошук</span></h2>
-                    <p class="text-gray-300 text-base md:text-lg leading-relaxed reveal">Ми створили екосистему, де навчання стає захопливою подорожжю.</p>
-                    <div class="grid grid-cols-2 gap-3 md:gap-6 reveal">
-                        <div class="offer-item-card p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/10 backdrop-blur-sm"><div class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center mb-3 text-[#2DD4BF]"><i class="fa-solid fa-calendar-check text-lg md:text-xl"></i></div><h4 class="font-bold text-white mb-1 text-sm md:text-base">Розумний розклад</h4><p class="text-gray-400 text-xs leading-relaxed hidden md:block">Керуйте своїми заняттями в один клік.</p></div>
-                        <div class="offer-item-card p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/10 backdrop-blur-sm"><div class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center mb-3 text-[#F59E0B]"><i class="fa-solid fa-gamepad text-lg md:text-xl"></i></div><h4 class="font-bold text-white mb-1 text-sm md:text-base">Гейміфікація</h4><p class="text-gray-400 text-xs leading-relaxed hidden md:block">Отримуйте бали та досягнення.</p></div>
-                        <div class="offer-item-card p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/10 backdrop-blur-sm"><div class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center mb-3 text-purple-400"><i class="fa-solid fa-user-shield text-lg md:text-xl"></i></div><h4 class="font-bold text-white mb-1 text-sm md:text-base">Особистий кабінет</h4><p class="text-gray-400 text-xs leading-relaxed hidden md:block">Вся історія занять у вашій кишені.</p></div>
-                        <div class="offer-item-card p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/10 backdrop-blur-sm"><div class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center mb-3 text-blue-400"><i class="fa-solid fa-chart-line text-lg md:text-xl"></i></div><h4 class="font-bold text-white mb-1 text-sm md:text-base">Трекер прогресу</h4><p class="text-gray-400 text-xs leading-relaxed hidden md:block">Наочна візуалізація успіхів.</p></div>
-                    </div>
-                </div>
-                <div class="lg:w-1/2 relative flex justify-center reveal w-full">
-                    <div class="relative w-full max-w-[500px] group" id="dash-slider-container">
-                        <div class="absolute -inset-4 bg-teal-400/20 rounded-[40px] blur-2xl"></div>
-                        <div class="relative bg-gray-900 rounded-[40px] md:rounded-[50px] p-2 md:p-3 shadow-2xl ring-1 ring-gray-800 overflow-hidden">
-                            <div class="relative h-[260px] md:h-[400px] rounded-[32px] md:rounded-[40px] overflow-hidden">
-                                <div class="dash-slide active absolute inset-0"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Dashboard"></div>
-                                <div class="dash-slide absolute inset-0"><img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Schedule"></div>
-                                <div class="dash-slide absolute inset-0"><img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Session"></div>
-                            </div>
-                            <button onclick="prevDashSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/10 hover:bg-teal-500 backdrop-blur-md rounded-full text-white transition flex items-center justify-center z-20"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-                            <button onclick="nextDashSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/10 hover:bg-teal-500 backdrop-blur-md rounded-full text-white transition flex items-center justify-center z-20"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-                        </div>
-                        <div class="flex justify-center mt-5 gap-2">
-                            <div class="dash-dot active w-8 h-2 rounded-full bg-teal-500"></div>
-                            <div class="dash-dot w-2 h-2 rounded-full bg-gray-600"></div>
-                            <div class="dash-dot w-2 h-2 rounded-full bg-gray-600"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ══ SPECIALISTS ══ -->
+<div id="specialists-root"></div>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section reveal">
+  <div class="container">
+    <div class="cta-banner">
+      <h3>Не знайшли свого ідеального фахівця?</h3>
+      <p>Перегляньте повний список із понад 5000 перевірених професіоналів</p>
+      <button class="btn-cta-white">
+        Повний каталог спеціалістів <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ECOSYSTEM (dark) ══ -->
+<section class="ecosystem-section">
+  <div class="container">
+    <div class="eco-inner">
+      <div class="reveal">
+        <div class="eco-label">Екосистема</div>
+        <h2 class="eco-h2">Libitum — це більше ніж <em>просто пошук</em></h2>
+        <p class="eco-desc">Ми створили екосистему, де навчання стає захопливою подорожжю. Від першого запиту до реального результату.</p>
+        <div class="eco-cards">
+          <div class="eco-card">
+            <div class="eco-card-icon" style="color:var(--teal-400)"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="eco-card-title">Розумний розклад</div>
+            <div class="eco-card-desc">Керуйте своїми заняттями в один клік.</div>
+          </div>
+          <div class="eco-card">
+            <div class="eco-card-icon" style="color:var(--amber)"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="eco-card-title">Гейміфікація</div>
+            <div class="eco-card-desc">Отримуйте бали та досягнення.</div>
+          </div>
+          <div class="eco-card">
+            <div class="eco-card-icon" style="color:#A78BFA"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="eco-card-title">Особистий кабінет</div>
+            <div class="eco-card-desc">Вся історія занять у вашій кишені.</div>
+          </div>
+          <div class="eco-card">
+            <div class="eco-card-icon" style="color:#60A5FA"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="eco-card-title">Трекер прогресу</div>
+            <div class="eco-card-desc">Наочна візуалізація успіхів.</div>
+          </div>
         </div>
+      </div>
+      <div class="reveal">
+        <div class="dash-slider-wrap">
+          <div class="dash-device">
+            <div class="dash-screen">
+              <div class="dash-slide active"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Dashboard"></div>
+              <div class="dash-slide"><img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80" alt="Schedule"></div>
+              <div class="dash-slide"><img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=800&q=80" alt="Session"></div>
+              <button class="dash-arrow left" onclick="dashPrev()"><i class="fa-solid fa-chevron-left" style="font-size:11px"></i></button>
+              <button class="dash-arrow right" onclick="dashNext()"><i class="fa-solid fa-chevron-right" style="font-size:11px"></i></button>
+            </div>
+          </div>
+          <div class="dash-dots">
+            <div class="dash-dot active"></div>
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="section-label">3 кроки</div>
+    <h2 class="section-h2 reveal">Як це працює</h2>
+    <p class="section-sub reveal">3 простих кроки, щоб знайти свого спеціаліста та почати навчання без зайвих ризиків.</p>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">1</div>
+        <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="step-title">Оберіть напрямок</div>
+        <div class="step-desc">Пошук за предметом, форматом та містом у нашому каталозі.</div>
+      </div>
+      <div class="step-card reveal" style="transition-delay:.1s">
+        <div class="step-num">2</div>
+        <div class="step-icon"><i class="fa-regular fa-comment-dots"></i></div>
+        <div class="step-title">Залиште заявку</div>
+        <div class="step-desc">Опишіть ціль навчання й отримайте швидку відповідь від фахівця.</div>
+      </div>
+      <div class="step-card reveal" style="transition-delay:.2s">
+        <div class="step-num">3</div>
+        <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="step-title">Почніть навчання</div>
+        <div class="step-desc">Після успішного пробного заняття підтвердіть довготривалу співпрацю.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-inner">
+      <h2 class="section-h2 reveal" style="margin-bottom:32px">Часті запитання</h2>
+      <div id="faq-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-logo">LIBITUM</div>
+        <div class="footer-brand-desc">Платформа для пошуку репетиторів, психологів та логопедів з прозорими правилами.</div>
+        <div class="footer-socials">
+          <a href="#" class="footer-social"><i class="fa-brands fa-telegram"></i></a>
+          <a href="#" class="footer-social"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакти</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@libitum.com">support@libitum.com</a></li>
+          <li><a href="#">@libitum_support</a></li>
+          <li><span>09:00–19:00 (Пн–Сб)</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Правила</div>
+        <ul class="footer-links">
+          <li><a href="#">Комісія після пробного заняття</a></li>
+          <li><a href="#">Відповідь у терміни SLA</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Навігація</div>
+        <ul class="footer-links">
+          <li><a href="#">Спеціалісти</a></li>
+          <li><a href="#how">Як це працює</a></li>
+          <li><a href="#">Відгуки</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Libitum Education. Всі права захищені</div>
+      <div class="footer-legal">
+        <a href="#">Умови використання</a>
+        <a href="#">Конфіденційність</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MOBILE TAB BAR ══ -->
+<div class="mobile-tabbar">
+  <div class="tabbar-inner">
+    <div class="tab-item active"><i class="fa-solid fa-house"></i><span>Головна</span></div>
+    <div class="tab-item"><i class="fa-solid fa-magnifying-glass"></i><span>Пошук</span></div>
+    <div class="tab-item ai-tab"><i class="fa-regular fa-star"></i><span>AI-підбір</span></div>
+    <div class="tab-item"><i class="fa-regular fa-user"></i><span>Кабінет</span></div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+const specialists = [
+  {
+    id: 'repetitors', title: 'Репетитори', subtitle: 'Кваліфіковані вчителі для ваших знань',
+    color: '#0D9488', bg: '#F0FDFA', href: 'category-repetitors.html',
+    people: [
+      { name:'Олена І.',    photo:'https://i.pravatar.cc/400?u=sp1', rating:'4.9', reviews:'48',  tags:['Англійська','Нім.'],   price:'400' },
+      { name:'Анна С.',     photo:'https://i.pravatar.cc/400?u=sp2', rating:'4.9', reviews:'89',  tags:['Математика','Фізика'], price:'350' },
+      { name:'Дмитро В.',   photo:'https://i.pravatar.cc/400?u=sp3', rating:'5.0', reviews:'120', tags:['Програмування'],       price:'500' },
+      { name:'Катерина С.', photo:'https://i.pravatar.cc/400?u=sp4', rating:'5.0', reviews:'75',  tags:['Хімія','Біологія'],    price:'450' },
+      { name:'Максим Р.',   photo:'https://i.pravatar.cc/400?u=sp5', rating:'4.7', reviews:'34',  tags:['Англійська'],          price:'550' },
+      { name:'Ірина Ф.',    photo:'https://i.pravatar.cc/400?u=sp6', rating:'4.8', reviews:'56',  tags:['Математика','НМТ'],    price:'480' },
+      { name:'Сергій Н.',   photo:'https://i.pravatar.cc/400?u=sp7', rating:'4.6', reviews:'22',  tags:['Фізика'],              price:'420' },
+    ]
+  },
+  {
+    id: 'psychologists', title: 'Психологи', subtitle: 'Ваша ментальна підтримка та спокій',
+    color: '#F59E0B', bg: '#FFFBEB', href: 'category-psychologists.html',
+    people: [
+      { name:'Марія К.',      photo:'https://i.pravatar.cc/400?u=ps1', rating:'5.0', reviews:'62',  tags:['Терапія','Сімейна'], price:'600' },
+      { name:'Олександр М.',  photo:'https://i.pravatar.cc/400?u=ps2', rating:'4.8', reviews:'45',  tags:['Дитяча','Стрес'],    price:'550' },
+      { name:'Вікторія Д.',   photo:'https://i.pravatar.cc/400?u=ps3', rating:'4.9', reviews:'112', tags:['Когнітивна'],        price:'700' },
+      { name:'Роман П.',      photo:'https://i.pravatar.cc/400?u=ps4', rating:'4.7', reviews:'40',  tags:['Підліткова'],        price:'500' },
+      { name:'Юлія Л.',       photo:'https://i.pravatar.cc/400?u=ps5', rating:'5.0', reviews:'18',  tags:['Арт-терапія'],       price:'650' },
+      { name:'Тетяна В.',     photo:'https://i.pravatar.cc/400?u=ps6', rating:'4.9', reviews:'73',  tags:['Тривога','Стрес'],   price:'580' },
+    ]
+  },
+  {
+    id: 'logopedists', title: 'Логопеди', subtitle: 'Розвиток мовлення та корекція',
+    color: '#F59E0B', bg: '#FFFBEB', href: 'category-logopedists.html',
+    people: [
+      { name:'Ігор П.',      photo:'https://i.pravatar.cc/400?u=lg1', rating:'4.8', reviews:'35', tags:['Корекція'],           price:'450' },
+      { name:'Наталія Л.',   photo:'https://i.pravatar.cc/400?u=lg2', rating:'5.0', reviews:'80', tags:['Постановка звуків'],  price:'500' },
+      { name:'Євген С.',     photo:'https://i.pravatar.cc/400?u=lg3', rating:'4.7', reviews:'29', tags:['Заїкання'],           price:'400' },
+      { name:'Ірина К.',     photo:'https://i.pravatar.cc/400?u=lg4', rating:'4.9', reviews:'82', tags:['Алалія'],             price:'450' },
+      { name:'Анастасія Т.', photo:'https://i.pravatar.cc/400?u=lg5', rating:'5.0', reviews:'14', tags:['Розвиток'],           price:'500' },
+    ]
+  }
+];
+
+const faqs = [
+  { q:'Чи можна залишити заявку без реєстрації?', a:'Так, платформа максимально спрощує шлях користувача. Ви можете обрати спеціаліста та надіслати запит як гість. Система автоматично створить персональний кабінет, а пароль прийде на пошту або в Telegram.' },
+  { q:'Як і коли відбувається оплата за навчання?', a:'Перша оплата лише після пробного заняття. Надалі можна оплачувати окремо або купувати пакети (5, 10, 20 уроків) зі знижкою.' },
+  { q:'Як Libitum перевіряє кваліфікацію спеціалістів?', a:'Триетапна верифікація: перевірка документів, аналіз досвіду та співбесіда з методистом. Тільки після цього профіль отримує позначку "Перевірено".' },
+  { q:'Що робити, якщо не підійшов спеціаліст?', a:'Повідомте в кабінеті — підберемо іншого безкоштовно з урахуванням ваших нових побажань.' },
+  { q:'Як працює система рейтингів?', a:'Відгук можна залишити лише після 3 повноцінних занять. Рейтинг формується з оцінок, пунктуальності та швидкості відповіді.' },
+];
+
+// ══ CARD CSS (inject once) ══
+const cardStyles = `
+  .spec-card { flex-shrink:0; width:240px; scroll-snap-align:start; background:white; border-radius:28px; border:1.5px solid #E2E8F0; overflow:hidden; display:flex; flex-direction:column; transition:all .3s cubic-bezier(.165,.84,.44,1); }
+  .spec-card:hover { transform:translateY(-6px); box-shadow:0 10px 40px rgba(15,23,42,.10); border-color:transparent; }
+  .card-photo { width:100%; height:180px; overflow:hidden; background:#F8FAFB; flex-shrink:0; }
+  .card-photo img { width:100%; height:100%; object-fit:cover; transition:transform .4s ease; }
+  .spec-card:hover .card-photo img { transform:scale(1.05); }
+  .card-body { padding:16px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .card-top-row { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .card-name { font-size:15px; font-weight:800; line-height:1.2; }
+  .rating-pill { display:inline-flex; align-items:center; gap:4px; background:#FFFBEB; border:1.5px solid #FDE68A; border-radius:20px; padding:3px 9px; font-size:12px; font-weight:800; flex-shrink:0; }
+  .rating-pill i { color:#F59E0B; font-size:10px; }
+  .rating-pill .rev { color:#94A3B8; font-weight:500; font-size:11px; }
+  .card-tags { display:flex; flex-wrap:wrap; gap:4px; }
+  .card-tag { background:#F8FAFB; border:1px solid #E2E8F0; border-radius:8px; padding:3px 8px; font-size:9px; font-weight:800; color:#64748B; text-transform:uppercase; letter-spacing:.05em; }
+  .card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1.5px dashed #E2E8F0; margin-top:auto; }
+  .card-price-label { font-size:9px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+  .card-price { font-size:18px; font-weight:800; }
+  .btn-book { padding:8px 14px; border-radius:10px; border:none; cursor:pointer; font-family:'Manrope',sans-serif; font-size:12px; font-weight:800; transition:all .2s; }
+  .btn-book:hover { opacity:.85; transform:scale(1.04); }
+  .stub-card { flex-shrink:0; width:240px; scroll-snap-align:start; border-radius:28px; border:2px dashed #E2E8F0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:28px 20px; cursor:pointer; transition:all .2s; text-decoration:none; background:white; }
+  .stub-card:hover { border-color:#2DD4BF; background:#F0FDFA; }
+  .stub-icon { width:52px; height:52px; border-radius:50%; background:#F8FAFB; border:1.5px solid #E2E8F0; display:flex; align-items:center; justify-content:center; font-size:20px; color:#64748B; transition:all .2s; }
+  .stub-card:hover .stub-icon { background:#CCFBF1; color:#0D9488; border-color:#CCFBF1; }
+  .stub-text { font-size:14px; font-weight:700; color:#64748B; text-align:center; line-height:1.4; transition:color .2s; }
+  .stub-card:hover .stub-text { color:#0D9488; }
+  .stub-count { font-size:12px; color:#94A3B8; font-weight:600; }
+  .spec-title-link { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  .spec-title-link:hover .spec-title { opacity:.75; }
+  .spec-title-arrow { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:1.5px solid; opacity:.65; transition:all .2s; }
+  .spec-title-link:hover .spec-title-arrow { opacity:1; transform:translateX(3px); }
+`;
+if(!document.getElementById('card-styles')) {
+  const s = document.createElement('style');
+  s.id = 'card-styles';
+  s.textContent = cardStyles;
+  document.head.appendChild(s);
+}
+
+// ══ RENDER SPECIALISTS ══
+function renderSpecialists() {
+  const root = document.getElementById('specialists-root');
+  root.innerHTML = specialists.map(sec => `
+    <section class="spec-section" id="spec-${sec.id}">
+      <div class="container">
+        <div class="spec-header">
+          <div>
+            <a href="${sec.href}" class="spec-title-link">
+              <div class="spec-title" style="color:${sec.color}">${sec.title}</div>
+              <span class="spec-title-arrow" style="color:${sec.color};border-color:${sec.color}"><i class="fa-solid fa-arrow-right" style="font-size:11px"></i></span>
+            </a>
+            <div class="spec-subtitle">${sec.subtitle}</div>
+          </div>
+          <div class="spec-header-right">
+            <div class="spec-scroll-btns">
+              <button class="spec-scroll-btn" onclick="scrollCards('${sec.id}',-1)"><i class="fa-solid fa-chevron-left" style="font-size:11px"></i></button>
+              <button class="spec-scroll-btn" onclick="scrollCards('${sec.id}',1)"><i class="fa-solid fa-chevron-right" style="font-size:11px"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="cards-wrapper">
+          <button class="card-nav-btn left" onclick="scrollCards('${sec.id}',-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="cards-track" id="track-${sec.id}">
+            ${sec.people.map(p => `
+              <div class="spec-card">
+                <div class="card-photo"><img src="${p.photo}" alt="${p.name}" loading="lazy"></div>
+                <div class="card-body">
+                  <div class="card-top-row">
+                    <div class="card-name">${p.name}</div>
+                    <div class="rating-pill"><i class="fa-solid fa-star"></i>${p.rating}<span class="rev">·${p.reviews}</span></div>
+                  </div>
+                  <div class="card-tags">${p.tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
+                  <div class="card-footer">
+                    <div><div class="card-price-label">Урок від</div><div class="card-price">₴${p.price}</div></div>
+                    <button class="btn-book" style="background:${sec.bg};color:${sec.color}">Записатися</button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+            <a href="${sec.href}" class="stub-card">
+              <div class="stub-icon"><i class="fa-solid fa-users"></i></div>
+              <div class="stub-text">Показати всіх<br>${sec.title.toLowerCase()}</div>
+              <div class="stub-count">${sec.people.length * 8}+ спеціалістів</div>
+            </a>
+          </div>
+          <button class="card-nav-btn right" onclick="scrollCards('${sec.id}',1)"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="card-dots" id="dots-${sec.id}">
+          ${sec.people.map((_,i)=>`<div class="card-dot ${i===0?'active':''}" style="${i===0?`background:${sec.color};width:18px;border-radius:3px`:''}"></div>`).join('')}
+        </div>
+      </div>
     </section>
+  `).join('');
 
-    <!-- HOW IT WORKS -->
-    <section class="py-16 md:py-24 bg-[#F9FAFB]">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="text-center mb-10 md:mb-16">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">Як це працює</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed">3 простих кроки, щоб знайти свого спеціаліста та почати навчання без зайвих ризиків.</p>
-            </div>
-            <div class="relative flex flex-col md:flex-row items-stretch justify-between gap-5 md:gap-8">
-                <div class="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-[#E5E7EB] -translate-y-1/2 z-0"></div>
-                <div class="relative z-10 w-full md:w-1/3 bg-white p-6 md:p-8 rounded-[28px] md:rounded-[32px] card-shadow border border-gray-50 flex flex-col step-card cursor-pointer"><span class="absolute top-4 right-6 md:top-6 md:right-8 text-[48px] md:text-[64px] font-black text-gray-50/50 leading-none select-none">1</span><div class="icon-box w-12 h-12 md:w-14 md:h-14 bg-[#E6FFFA] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-sm text-[#2DD4BF]"><svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div><h3 class="text-lg md:text-xl font-bold text-[#111827] mb-2">Оберіть напрямок</h3><p class="text-gray-400 text-sm leading-relaxed">Пошук за предметом, форматом та містом у нашому каталозі.</p></div>
-                <div class="relative z-10 w-full md:w-1/3 bg-white p-6 md:p-8 rounded-[28px] md:rounded-[32px] card-shadow border border-gray-50 flex flex-col step-card cursor-pointer"><span class="absolute top-4 right-6 md:top-6 md:right-8 text-[48px] md:text-[64px] font-black text-gray-50/50 leading-none select-none">2</span><div class="icon-box w-12 h-12 md:w-14 md:h-14 bg-[#E6FFFA] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-sm text-[#2DD4BF]"><svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg></div><h3 class="text-lg md:text-xl font-bold text-[#111827] mb-2">Залиште заявку</h3><p class="text-gray-400 text-sm leading-relaxed">Опишіть ціль навчання й отримайте швидку відповідь від фахівця.</p></div>
-                <div class="relative z-10 w-full md:w-1/3 bg-white p-6 md:p-8 rounded-[28px] md:rounded-[32px] card-shadow border border-gray-50 flex flex-col step-card cursor-pointer"><span class="absolute top-4 right-6 md:top-6 md:right-8 text-[48px] md:text-[64px] font-black text-gray-50/50 leading-none select-none">3</span><div class="icon-box w-12 h-12 md:w-14 md:h-14 bg-[#E6FFFA] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-sm text-[#2DD4BF]"><svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3 class="text-lg md:text-xl font-bold text-[#111827] mb-2">Почніть навчання</h3><p class="text-gray-400 text-sm leading-relaxed">Після успішного пробного заняття підтвердіть довготривалу співпрацю.</p></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="container mx-auto px-4 md:px-6 py-10 md:py-16 max-w-4xl border-t border-gray-100">
-        <h2 class="text-3xl md:text-4xl font-extrabold mb-8 md:mb-12 text-center text-gray-900 tracking-tight reveal">Часті запитання</h2>
-        <div class="space-y-3 md:space-y-4">
-            <details class="group bg-white rounded-[20px] md:rounded-[24px] border border-gray-100 p-5 md:p-6 cursor-pointer transition-all hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5 reveal [&_summary::-webkit-details-marker]:hidden"><summary class="flex items-center justify-between font-bold text-base md:text-lg text-gray-800">Чи можна залишити заявку без реєстрації?<span class="transition-transform duration-500 group-open:rotate-180 text-teal-500 ml-3 flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span></summary><p class="mt-4 text-gray-500 text-sm leading-relaxed border-t border-gray-50 pt-4 animate-fade-in">Так, платформа максимально спрощує шлях користувача. Ви можете обрати спеціаліста та надіслати запит як гість. Система автоматично створить персональний кабінет, а пароль прийде на пошту або в Telegram.</p></details>
-            <details class="group bg-white rounded-[20px] md:rounded-[24px] border border-gray-100 p-5 md:p-6 cursor-pointer transition-all hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5 reveal [&_summary::-webkit-details-marker]:hidden"><summary class="flex items-center justify-between font-bold text-base md:text-lg text-gray-800">Як і коли відбувається оплата за навчання?<span class="transition-transform duration-500 group-open:rotate-180 text-teal-500 ml-3 flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span></summary><p class="mt-4 text-gray-500 text-sm leading-relaxed border-t border-gray-50 pt-4 animate-fade-in">Перша оплата лише після пробного заняття. Надалі можна оплачувати окремо або купувати пакети (5, 10, 20 уроків) зі знижкою.</p></details>
-            <details class="group bg-white rounded-[20px] md:rounded-[24px] border border-gray-100 p-5 md:p-6 cursor-pointer transition-all hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5 reveal [&_summary::-webkit-details-marker]:hidden"><summary class="flex items-center justify-between font-bold text-base md:text-lg text-gray-800">Як Libitum перевіряє кваліфікацію спеціалістів?<span class="transition-transform duration-500 group-open:rotate-180 text-teal-500 ml-3 flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span></summary><p class="mt-4 text-gray-500 text-sm leading-relaxed border-t border-gray-50 pt-4 animate-fade-in">Триетапна верифікація: перевірка документів, аналіз досвіду та співбесіда з методистом. Тільки після цього профіль отримує позначку "Перевірено".</p></details>
-            <details class="group bg-white rounded-[20px] md:rounded-[24px] border border-gray-100 p-5 md:p-6 cursor-pointer transition-all hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5 reveal [&_summary::-webkit-details-marker]:hidden"><summary class="flex items-center justify-between font-bold text-base md:text-lg text-gray-800">Що робити, якщо не підійшов спеціаліст?<span class="transition-transform duration-500 group-open:rotate-180 text-teal-500 ml-3 flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span></summary><p class="mt-4 text-gray-500 text-sm leading-relaxed border-t border-gray-50 pt-4 animate-fade-in">Повідомте в кабінеті — підберемо іншого безкоштовно з урахуванням ваших нових побажань.</p></details>
-            <details class="group bg-white rounded-[20px] md:rounded-[24px] border border-gray-100 p-5 md:p-6 cursor-pointer transition-all hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5 reveal [&_summary::-webkit-details-marker]:hidden"><summary class="flex items-center justify-between font-bold text-base md:text-lg text-gray-800">Як працює система рейтингів?<span class="transition-transform duration-500 group-open:rotate-180 text-teal-500 ml-3 flex-shrink-0"><i class="fa-solid fa-chevron-down"></i></span></summary><p class="mt-4 text-gray-500 text-sm leading-relaxed border-t border-gray-50 pt-4 animate-fade-in">Відгук можна залишити лише після 3 повноцінних занять. Рейтинг формується з оцінок, пунктуальності та швидкості відповіді.</p></details>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-white pt-12 md:pt-20 pb-10 border-t border-gray-100">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-16">
-                <div class="col-span-2 md:col-span-1 space-y-4"><h4 class="text-black font-extrabold uppercase tracking-widest text-[14px]">LIBITUM</h4><p class="text-gray-500 text-[13px] leading-relaxed font-medium">Платформа для пошуку репетиторів, психологів та логопедів з прозорими правилами.</p><div class="flex space-x-3 pt-1"><a href="#" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-teal-50 hover:text-teal-600 transition"><i class="fa-brands fa-telegram text-sm"></i></a><a href="#" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-teal-50 hover:text-teal-600 transition"><i class="fa-brands fa-instagram text-sm"></i></a></div></div>
-                <div class="space-y-4"><h4 class="text-black font-extrabold uppercase tracking-widest text-[12px] md:text-[14px]">КОНТАКТИ</h4><ul class="text-gray-500 text-[12px] md:text-[14px] space-y-2 font-medium"><li><a href="mailto:support@libitum.com" class="hover:text-teal-600 transition">support@libitum.com</a></li><li><a href="https://t.me/libitum_support" class="hover:text-teal-600 transition">@libitum_support</a></li><li class="text-[11px] text-gray-400">09:00–19:00 (Пн–Сб)</li></ul></div>
-                <div class="space-y-4"><h4 class="text-black font-extrabold uppercase tracking-widest text-[12px] md:text-[14px]">ПРАВИЛА</h4><ul class="text-gray-500 text-[12px] space-y-2 font-medium"><li>Комісія після пробного заняття</li><li>Відповідь у терміни SLA</li></ul></div>
-                <div class="space-y-4"><h4 class="text-black font-extrabold uppercase tracking-widest text-[12px] md:text-[14px]">НАВІГАЦІЯ</h4><ul class="text-gray-500 text-[12px] space-y-2 font-medium"><li><a href="#" class="hover:text-teal-600 transition">Спеціалісти</a></li><li><a href="#" class="hover:text-teal-600 transition">Як це працює</a></li><li><a href="#" class="hover:text-teal-600 transition">Відгуки</a></li></ul></div>
-            </div>
-            <div class="border-t border-gray-100 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-2">
-                <p class="text-gray-400 text-[12px] font-medium text-center">© 2026 Libitum Education. Всі права захищені</p>
-                <div class="flex space-x-4 text-[12px] text-gray-400"><a href="#" class="hover:text-teal-600 transition">Умови використання</a><a href="#" class="hover:text-teal-600 transition">Конфіденційність</a></div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-    // ===== DATA =====
-    const specialistsData = [
-        {
-            id: 'repetitors',
-            title: 'Репетитори',
-            subtitle: 'Кваліфіковані вчителі для ваших знань',
-            colorHex: '#0D9488',
-            bgLight: '#f0fdfa',
-            arrowClass: '',   // teal hover (default)
-            prevId: null,
-            nextId: 'psychologists',
-            people: [
-                { name: 'Олена І.', img: 'https://i.pravatar.cc/150?u=1', rating: '4.9', reviews: '48', subjects: ['Англійська', 'Німецька'], price: '400', students: '49', sessions: '4975', url: 'tutor-profile.html' },
-                { name: 'Анна С.', img: 'https://i.pravatar.cc/150?u=2', rating: '4.9', reviews: '89', subjects: ['Математика', 'Фізика'], price: '350', students: '42', sessions: '3120', url: 'tutor-profile.html' },
-                { name: 'Дмитро В.', img: 'https://i.pravatar.cc/150?u=3', rating: '5.0', reviews: '120', subjects: ['Програмування'], price: '500', students: '56', sessions: '6200', url: 'tutor-profile.html' },
-                { name: 'Катерина С.', img: 'https://i.pravatar.cc/150?u=4', rating: '5.0', reviews: '75', subjects: ['Хімія', 'Біологія'], price: '450', students: '38', sessions: '2450', url: 'tutor-profile.html' },
-                { name: 'Максим Р.', img: 'https://i.pravatar.cc/150?u=5', rating: '4.7', reviews: '34', subjects: ['Англійська'], price: '550', students: '25', sessions: '1780', url: 'tutor-profile.html' }
-            ]
-        },
-        {
-            id: 'psychologists',
-            title: 'Психологи',
-            subtitle: 'Ваша ментальна підтримка та спокій',
-            colorHex: '#F59E0B',
-            bgLight: '#fffbeb',
-            arrowClass: 'amber',
-            prevId: 'repetitors',
-            nextId: 'logopedists',
-            people: [
-                { name: 'Марія К.', img: 'https://i.pravatar.cc/150?u=10', rating: '5.0', reviews: '62', subjects: ['Терапія', 'Сімейна'], price: '600', students: '38', sessions: '1250', url: 'tutor-profile.html' },
-                { name: 'Олександр М.', img: 'https://i.pravatar.cc/150?u=11', rating: '4.8', reviews: '45', subjects: ['Дитяча', 'Стрес'], price: '550', students: '29', sessions: '980', url: 'tutor-profile.html' },
-                { name: 'Вікторія Д.', img: 'https://i.pravatar.cc/150?u=12', rating: '4.9', reviews: '112', subjects: ['Когнітивна'], price: '700', students: '45', sessions: '2100', url: 'tutor-profile.html' },
-                { name: 'Роман П.', img: 'https://i.pravatar.cc/150?u=13', rating: '4.7', reviews: '40', subjects: ['Підліткова'], price: '500', students: '22', sessions: '640', url: 'tutor-profile.html' },
-                { name: 'Юлія Л.', img: 'https://i.pravatar.cc/150?u=14', rating: '5.0', reviews: '18', subjects: ['Арт-терапія'], price: '650', students: '15', sessions: '420', url: 'tutor-profile.html' }
-            ]
-        },
-        {
-            id: 'logopedists',
-            title: 'Логопеди',
-            subtitle: 'Розвиток мовлення та корекція',
-            colorHex: '#F59E0B',
-            bgLight: '#fffbeb',
-            arrowClass: 'amber',
-            prevId: 'psychologists',
-            nextId: null,
-            people: [
-                { name: 'Ігор П.', img: 'https://i.pravatar.cc/150?u=20', rating: '4.8', reviews: '35', subjects: ['Корекція'], price: '450', students: '25', sessions: '850', url: 'tutor-profile.html' },
-                { name: 'Наталія Л.', img: 'https://i.pravatar.cc/150?u=21', rating: '5.0', reviews: '80', subjects: ['Постановка звуків'], price: '500', students: '42', sessions: '1750', url: 'tutor-profile.html' },
-                { name: 'Євген С.', img: 'https://i.pravatar.cc/150?u=22', rating: '4.7', reviews: '29', subjects: ['Заїкання'], price: '400', students: '18', sessions: '520', url: 'tutor-profile.html' },
-                { name: 'Ірина К.', img: 'https://i.pravatar.cc/150?u=23', rating: '4.9', reviews: '82', subjects: ['Алалія'], price: '450', students: '35', sessions: '1200', url: 'tutor-profile.html' },
-                { name: 'Анастасія Т.', img: 'https://i.pravatar.cc/150?u=24', rating: '5.0', reviews: '14', subjects: ['Розвиток'], price: '500', students: '12', sessions: '310', url: 'tutor-profile.html' }
-            ]
-        }
-    ];
-
-    // ===== RENDER =====
-    function renderSpecialists() {
-        const container = document.getElementById('specialists-container');
-        container.innerHTML = specialistsData.map(sec => {
-
-            // Build prev / next labels
-            const prevSec = sec.prevId ? specialistsData.find(s => s.id === sec.prevId) : null;
-            const nextSec = sec.nextId ? specialistsData.find(s => s.id === sec.nextId) : null;
-
-            const prevBtn = prevSec
-                ? `<button
-                        onclick="scrollToSection('${prevSec.id}')"
-                        class="sec-nav-arrow ${sec.arrowClass} group/arr flex-shrink-0"
-                        title="До розділу «${prevSec.title}»"
-                    >
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>`
-                : `<div class="w-[34px] flex-shrink-0"></div>`; // placeholder to keep layout
-
-            const nextBtn = nextSec
-                ? `<button
-                        onclick="scrollToSection('${nextSec.id}')"
-                        class="sec-nav-arrow ${sec.arrowClass} group/arr flex items-center gap-1.5 px-3 rounded-full w-auto"
-                        title="До розділу «${nextSec.title}»"
-                        style="font-size:12px;font-weight:700;color:#6b7280;"
-                    >
-                        <span class="hidden sm:inline" style="font-size:12px;font-weight:600;color:#9ca3af;">${nextSec.title}</span>
-                        <i class="fa-solid fa-chevron-right text-[11px]"></i>
-                    </button>`
-                : '';
-
-            return `
-            <section class="container mx-auto px-4 md:px-6 py-8 md:py-12" id="section-${sec.id}">
-
-                <!-- Section header with nav arrows -->
-                <div class="flex items-end justify-between mb-5 md:mb-10">
-                    <div class="flex items-center gap-3">
-                        ${prevBtn}
-                        <div style="color:${sec.colorHex}">
-                            <h2 class="text-3xl md:text-4xl font-extrabold section-header-line tracking-tight">${sec.title}</h2>
-                            <p class="text-gray-400 mt-1 md:mt-2 text-xs md:text-sm font-medium">${sec.subtitle}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <!-- Category next-arrow (visible on all screens) -->
-                        ${nextBtn}
-                        <!-- Card scroll arrows (desktop only) -->
-                        <div class="hidden md:flex space-x-2 text-gray-400 ml-2">
-                            <button onclick="scrollCards('${sec.id}',-1)" class="w-9 h-9 border border-gray-200 rounded-full flex items-center justify-center hover:bg-white hover:border-gray-300 transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-                            <button onclick="scrollCards('${sec.id}',1)" class="w-9 h-9 border border-gray-200 rounded-full flex items-center justify-center hover:bg-white hover:border-gray-300 transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cards wrapper -->
-                <div class="cards-track-wrapper px-2 md:px-0">
-                    <button class="cards-nav-btn left" onclick="scrollCards('${sec.id}',-1)"><i class="fa-solid fa-chevron-left text-[11px]"></i></button>
-                    <div class="cards-track" id="track-${sec.id}">
-                        ${sec.people.map(r => `
-                            <div class="card-item bg-white p-5 md:p-6 rounded-[28px] md:rounded-[32px] specialist-card border border-gray-50 flex flex-col justify-between group">
-                                <div>
-                                    <div class="flex items-start space-x-3 mb-4">
-                                        <img src="${r.img}" class="w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover ring-4 ring-gray-50 flex-shrink-0" loading="lazy">
-                                        <div class="flex-1 min-w-0">
-                                            <h3 class="font-bold text-base text-gray-900 leading-tight truncate">${r.name}</h3>
-                                            <div class="rating-inline mt-1.5">
-                                                <i class="fa-solid fa-star"></i>
-                                                <span>${r.rating}</span>
-                                                <span class="sep">|</span>
-                                                <span class="rev-count">${r.reviews}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-wrap gap-1 mb-3">
-                                        ${r.subjects.map(s => `<span class="bg-gray-50 text-gray-600 px-2.5 py-1 rounded-xl text-[9px] font-bold uppercase tracking-wide border border-gray-100">${s}</span>`).join('')}
-                                    </div>
-                                    <div class="flex space-x-3 text-gray-400 text-[10px] mb-4 font-medium">
-                                        <div class="flex items-center"><i class="fa-solid fa-user-group mr-1 opacity-60"></i>${r.students} учнів</div>
-                                        <div class="flex items-center"><i class="fa-solid fa-suitcase mr-1 opacity-60"></i>${r.sessions} занять</div>
-                                    </div>
-                                </div>
-                                <div class="pt-4 border-t border-dashed border-gray-100 flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gray-400 text-[9px] font-bold uppercase tracking-widest">Урок від</p>
-                                        <p class="text-lg font-semibold text-gray-900">₴${r.price}</p>
-                                    </div>
-                                    <a href="${r.url}" class="p-2.5 rounded-xl transition-all shadow-sm active:scale-90 flex items-center justify-center" style="background-color:${sec.bgLight};color:${sec.colorHex}">
-                                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="cards-nav-btn right" onclick="scrollCards('${sec.id}',1)"><i class="fa-solid fa-chevron-right text-[11px]"></i></button>
-                </div>
-
-                <!-- Dots -->
-                <div class="flex justify-center mt-4 gap-1.5 md:hidden" id="dots-${sec.id}">
-                    ${sec.people.map((_,i) => `<div class="w-1.5 h-1.5 rounded-full transition-all duration-300 ${i===0?'w-4 bg-gray-400':'bg-gray-200'}" data-dot="${sec.id}-${i}"></div>`).join('')}
-                </div>
-            </section>`;
-        }).join('');
-
-        // Scroll dot listeners
-        specialistsData.forEach(sec => {
-            const track = document.getElementById('track-' + sec.id);
-            if (track) track.addEventListener('scroll', () => updateDots(sec.id, track), { passive: true });
-        });
+  specialists.forEach(sec => {
+    const track = document.getElementById(`track-${sec.id}`);
+    if(track) {
+      track.addEventListener('scroll', () => syncDots(sec), {passive:true});
+      addDragScroll(track);
     }
+  });
+}
 
-    function scrollToSection(id) {
-        const el = document.getElementById('section-' + id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+function addDragScroll(el) {
+  let down = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => { down=true; startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; el.style.cursor='grabbing'; });
+  el.addEventListener('mouseleave', () => { down=false; el.style.cursor='grab'; });
+  el.addEventListener('mouseup', () => { down=false; el.style.cursor='grab'; });
+  el.addEventListener('mousemove', e => { if(!down) return; e.preventDefault(); el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX) * 1.4; });
+}
 
-    function scrollCards(sectionId, dir) {
-        const track = document.getElementById('track-' + sectionId);
-        if (!track) return;
-        track.scrollBy({ left: dir * (230 + 14), behavior: 'smooth' });
-    }
+function syncDots(sec) {
+  const track = document.getElementById(`track-${sec.id}`);
+  const dots = document.querySelectorAll(`#dots-${sec.id} .card-dot`);
+  const idx = Math.round(track.scrollLeft / (240+16));
+  dots.forEach((d,i) => {
+    d.classList.toggle('active', i===idx);
+    d.style.background = i===idx ? sec.color : '';
+    d.style.width = i===idx ? '18px' : '6px';
+    d.style.borderRadius = i===idx ? '3px' : '50%';
+  });
+}
 
-    function updateDots(sectionId, track) {
-        const idx = Math.round(track.scrollLeft / (230 + 14));
-        document.querySelectorAll('[data-dot^="' + sectionId + '-"]').forEach((dot, i) => {
-            dot.style.width = i === idx ? '16px' : '6px';
-            dot.style.backgroundColor = i === idx ? '#9ca3af' : '#e5e7eb';
-        });
-    }
+function scrollCards(id, dir) {
+  const track = document.getElementById(`track-${id}`);
+  if(track) track.scrollBy({left: dir*(240+16), behavior:'smooth'});
+}
 
-    // ===== MOBILE MENU =====
-    let menuOpen = false;
-    function toggleMobileMenu() {
-        menuOpen = !menuOpen;
-        document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
-        document.getElementById('menu-overlay').classList.toggle('hidden', !menuOpen);
-        document.getElementById('hamburger-icon').className = menuOpen ? 'fa-solid fa-xmark text-gray-700' : 'fa-solid fa-bars text-gray-700';
-        document.body.style.overflow = menuOpen ? 'hidden' : '';
-    }
+// ══ RENDER FAQ ══
+function renderFaq() {
+  document.getElementById('faq-list').innerHTML = faqs.map((f,i) => `
+    <div class="faq-item ${i===0?'open':''}" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <div class="faq-icon"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="faq-a">${f.a}</div>
+    </div>
+  `).join('');
+}
 
-    // ===== HERO SLIDER =====
-    let currentHeroSlide = 0;
-    function nextHeroSlide() {
-        const slides = document.querySelectorAll('.hero-slide');
-        currentHeroSlide = (currentHeroSlide + 1) % slides.length;
-        slides.forEach((s, i) => s.classList.toggle('active', i === currentHeroSlide));
-    }
-    function prevHeroSlide() {
-        const slides = document.querySelectorAll('.hero-slide');
-        currentHeroSlide = (currentHeroSlide - 1 + slides.length) % slides.length;
-        slides.forEach((s, i) => s.classList.toggle('active', i === currentHeroSlide));
-    }
+function toggleFaq(idx) {
+  const item = document.getElementById(`faq-${idx}`);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
 
-    // ===== DASHBOARD SLIDER =====
-    let currentDashIndex = 0;
-    function updateDashSlider(index) {
-        document.querySelectorAll('.dash-slide').forEach((s, i) => s.style.opacity = i === index ? '0.8' : '0');
-        document.querySelectorAll('.dash-dot').forEach((d, i) => {
-            d.classList.toggle('active', i === index);
-            d.classList.toggle('bg-teal-500', i === index);
-            d.classList.toggle('bg-gray-600', i !== index);
-        });
-        currentDashIndex = index;
-    }
-    function nextDashSlide() { updateDashSlider((currentDashIndex + 1) % 3); }
-    function prevDashSlide() { updateDashSlider((currentDashIndex - 1 + 3) % 3); }
+// ══ SUBJECTS ══
+function scrollSubjects(dir) {
+  document.getElementById('subj-track').scrollBy({left: dir*240, behavior:'smooth'});
+}
 
-    // ===== SUBJECTS SCROLL =====
-    function scrollSubjects(dir) {
-        document.getElementById('subject-track').scrollBy({ left: dir * 220, behavior: 'smooth' });
-    }
+// ══ DASHBOARD SLIDER ══
+let dashIdx = 0;
+function updateDash(idx) {
+  dashIdx = idx;
+  document.querySelectorAll('.dash-slide').forEach((s,i) => s.classList.toggle('active', i===idx));
+  document.querySelectorAll('.dash-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+}
+function dashNext() { updateDash((dashIdx+1)%3); }
+function dashPrev() { updateDash((dashIdx+2)%3); }
 
-    // ===== REVEAL =====
-    function reveal() {
-        document.querySelectorAll('.reveal').forEach(el => {
-            if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('active');
-        });
-    }
+// ══ MOBILE DRAWER ══
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
-    // ===== TOUCH SWIPE =====
-    function addSwipe(el, onL, onR) {
-        let sx = 0;
-        el.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
-        el.addEventListener('touchend', e => {
-            const d = sx - e.changedTouches[0].clientX;
-            if (Math.abs(d) > 50) d > 0 ? onL() : onR();
-        }, { passive: true });
-    }
+// ══ LANG ══
+function setLang(btn) {
+  document.querySelectorAll('.drawer-lang-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.cssText = 'flex:1;padding:12px;text-align:center;font-family:Manrope,sans-serif;font-size:14px;font-weight:700;color:#64748B;background:none;border:none;cursor:pointer';
+  });
+  btn.classList.add('active');
+  btn.style.cssText = 'flex:1;padding:12px;text-align:center;font-family:Manrope,sans-serif;font-size:14px;font-weight:700;background:white;color:#0D9488;box-shadow:inset 0 0 0 1.5px #14B8A6;border-radius:10px;border:none;cursor:pointer';
+}
 
-    // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', () => {
-        renderSpecialists();
-        setInterval(nextHeroSlide, 6000);
-        setInterval(nextDashSlide, 5000);
-        window.addEventListener('scroll', reveal, { passive: true });
-        reveal();
-        setTimeout(() => {
-            const hw = document.querySelector('.hero-image-wrapper');
-            if (hw) addSwipe(hw, nextHeroSlide, prevHeroSlide);
-            const dc = document.getElementById('dash-slider-container');
-            if (dc) addSwipe(dc, nextDashSlide, prevDashSlide);
-        }, 300);
-    });
-    </script>
+// ══ REVEAL ══
+function revealOnScroll() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    if(el.getBoundingClientRect().top < window.innerHeight - 64) el.classList.add('visible');
+  });
+}
+
+// ══ INIT ══
+document.addEventListener('DOMContentLoaded', () => {
+  renderSpecialists();
+  renderFaq();
+  // drag on subjects
+  addDragScroll(document.getElementById('subj-track'));
+  setInterval(dashNext, 5000);
+  window.addEventListener('scroll', revealOnScroll, {passive:true});
+  revealOnScroll();
+});
+</script>
 </body>
 </html>
